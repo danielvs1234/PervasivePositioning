@@ -1,0 +1,2 @@
+rootProject.name='PervasivePositioning'
+include ':app'
