@@ -3,11 +3,15 @@ package com.example.pervasivepositioning;
 import android.content.Context;
 import android.util.Log;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -20,17 +24,27 @@ public class StorageHandler {
     }
 
 
-    public void write(String map) {
+    public void write(String map) throws IOException {
 
         FileOutputStream fileOutputStream;
 
         try {
+  //          fileOutputStream = this.context.openFileOutput("map.dat", Context.MODE_APPEND);
+  //          ObjectOutputStream os = new ObjectOutputStream(fileOutputStream);
+   //         os.writeObject(map);
+   //         os.close();
+   //         fileOutputStream.close();
+            if(checkIfFileExists()) {
+                Writer out = new BufferedWriter(new FileWriter("map.dat", true));
+                out.write(map);
+                out.close();
+            }else {
                 fileOutputStream = this.context.openFileOutput("map.dat", Context.MODE_APPEND);
                 ObjectOutputStream os = new ObjectOutputStream(fileOutputStream);
                 os.writeObject(map);
                 os.close();
                 fileOutputStream.close();
-
+            }
         }catch(Exception e){
             Log.d("Save to Storage", "saveMapToStorage: Method failed ");
             e.printStackTrace();

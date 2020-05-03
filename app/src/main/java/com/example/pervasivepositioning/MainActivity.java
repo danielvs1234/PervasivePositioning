@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -115,13 +116,17 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-                storageHandler.write(cutChar(string.toString()) + "\n");
+                try {
+                    storageHandler.write(cutChar(string.toString()) + "\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
     public String cutChar(String str) {
-        if (str != null && str.length() > 0 && str.charAt(str.length() - 1) == 'x') {
+        if (str != null && str.length() > 0 && str.charAt(str.length() - 1) == ',') {
             str = str.substring(0, str.length() - 1);
         }
         return str;
