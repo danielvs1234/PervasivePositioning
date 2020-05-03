@@ -9,6 +9,7 @@ import android.net.wifi.ScanResult;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,11 +25,14 @@ public class MainActivity extends AppCompatActivity {
 
     Button signalButton;
     Button scanButton;
+    Button fileContent;
+    Button deleteButton;
     TextView dataInputView;
     TextView dataTextView;
     TextView distTextView;
     List<String> ssids = new ArrayList<>();
     Map<String, Map<String, Integer>> training = new HashMap<>();
+    StorageHandler storageHandler;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -36,15 +40,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ssids.add("Westh");
+        ssids.add("DIRECT-EO pass-PHILIPS TV");
+        ssids.add("ismart");
+        storageHandler = new StorageHandler(getApplicationContext());
+
+
         int PERMISSION_REQUEST_CODE = 69;
 
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_DENIED) {
-            String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+            String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
             requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-            ssids.add("westh");
-            ssids.add("cablebox-4d68");
-            ssids.add("k");
+
         }
 
 
@@ -54,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
         signalButton = findViewById(R.id.signalButton);
         scanButton = findViewById(R.id.scanButton);
+        fileContent = findViewById(R.id.fileContent);
+        deleteButton = findViewById(R.id.deleteButton);
 
         dataTextView = findViewById(R.id.dataTextView);
         dataTextView.setMovementMethod(new ScrollingMovementMethod());
@@ -72,21 +82,48 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getApplicationContext().deleteFile("map.dat");
+            }
+        });
+
+        fileContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataTextView.setText("");
+                dataTextView.setText(storageHandler.read());
+            }
+        });
+
         signalButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
                 List<ScanResult> result = wifiSignal.calculateSignalLevel(4);
+                String gridPos = dataInputView.getText().toString();
+                StringBuilder string = new StringBuilder();
+                string.append(gridPos + ";");
                 for(int i = 0; i<result.size(); i++){
-                    String gridPos = dataInputView.getText().toString();
                     Map<String, Integer> temp = new HashMap<>();
-                    for(int j = 0; j <ssids.size();j++){
-                        if(result.get(i).SSID.equalsIgnoreCase(ssids.get(j)))
-                            temp.put(result.get(i).SSID, result.get(i).frequency);
+                    for(String j : ssids){
+                        if(result.get(i).SSID.equals(j)) {
+                            temp.put(result.get(i).SSID, result.get(i).level);
+                            Log.d("ClickingMahBaby", "result: " + result.get(i).SSID + " " + result.get(i).level);
+                            string.append(result.get(i).level+",");
+                        }
                     }
-                    training.put(gridPos, temp);
                 }
+                storageHandler.write(cutChar(string.toString()) + "\n");
             }
         });
+    }
+
+    public String cutChar(String str) {
+        if (str != null && str.length() > 0 && str.charAt(str.length() - 1) == 'x') {
+            str = str.substring(0, str.length() - 1);
+        }
+        return str;
     }
 }
