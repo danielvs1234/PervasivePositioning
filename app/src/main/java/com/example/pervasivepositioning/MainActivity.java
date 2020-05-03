@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     Button signalButton;
     Button scanButton;
     TextView dataTextView;
+    TextView distTextView;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
         dataTextView.setMovementMethod(new ScrollingMovementMethod());
         dataTextView.setText("");
 
+        distTextView = findViewById(R.id.distanceTextView);
+        distTextView.setMovementMethod(new ScrollingMovementMethod());
+        distTextView.setText("");
+
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +67,10 @@ public class MainActivity extends AppCompatActivity {
                 if(result.size() > 0) {
                     for(ScanResult r : result){
                         if(r.SSID.equals("Westh")){
-                            dataTextView.append("" + r.level + "\n");
+                            int localLevel = r.level;
+                            int localFreq = r.frequency;
+                            dataTextView.append("Dbm: " + localLevel + "---- Distance: " + wifiSignal.getDistance(localFreq, localLevel));
+
                         }
                     }
 

@@ -35,10 +35,22 @@ public class WifiSignalDataCollector {
         for(ScanResult r : result){
             Log.d("Scan", "ScanResult level: " + r.SSID + " "+ r.level);
         }
+
         return result;
     }
 
     public void scan(){
         ((WifiManager) context.getSystemService(Context.WIFI_SERVICE)).startScan();
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public int getDistance(int freq, int signalLevel){
+        int distance = 0;
+        double frequency = (double) freq;
+       // distance = 10.0 ^ ((27.55 - (20.0 * Math.log10(frequency) + signalLevel)/20.0));
+
+
+        return distance;
+    }
+
 }
