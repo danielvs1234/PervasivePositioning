@@ -13,7 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,8 +24,12 @@ public class MainActivity extends AppCompatActivity {
 
     Button signalButton;
     Button scanButton;
+    TextView dataInputView;
     TextView dataTextView;
     TextView distTextView;
+    List<String> ssids = new ArrayList<>();
+    Map<String, Map<String, Integer>> training = new HashMap<>();
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_DENIED) {
             String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
             requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            ssids.add("westh");
+            ssids.add("cablebox-4d68");
+            ssids.add("k");
         }
 
 
@@ -53,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         distTextView.setMovementMethod(new ScrollingMovementMethod());
         distTextView.setText("");
 
+        dataInputView = findViewById(R.id.dataInputText);
+
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,22 +73,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
         signalButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
                 List<ScanResult> result = wifiSignal.calculateSignalLevel(4);
-                if(result.size() > 0) {
-                    for(ScanResult r : result){
-                        if(r.SSID.equals("Westh")){
-                            int localLevel = r.level;
-                            int localFreq = r.frequency;
-                            dataTextView.append("Dbm: " + localLevel + "---- Distance: " + wifiSignal.getDistance(localFreq, localLevel));
-
-                        }
+                for(int i = 0; i<result.size(); i++){
+                    String gridPos = dataInputView.getText().toString();
+                    Map<String, Integer> temp = new HashMap<>();
+                    for(int j = 0; j <ssids.size();j++){
+                        if(result.get(i).SSID.equalsIgnoreCase(ssids.get(j)))
+                            temp.put(result.get(i).SSID, result.get(i).frequency);
                     }
-
-               }
+                    training.put(gridPos, temp);
+                }
             }
         });
     }
-
 }

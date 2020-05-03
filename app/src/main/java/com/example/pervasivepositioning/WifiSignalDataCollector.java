@@ -49,8 +49,6 @@ public class WifiSignalDataCollector {
         double frequency = (double) freq;
        // distance = 10.0 ^ ((27.55 - (20.0 * Math.log10(frequency) + signalLevel)/20.0));
 
-
         return distance;
     }
-
 }
