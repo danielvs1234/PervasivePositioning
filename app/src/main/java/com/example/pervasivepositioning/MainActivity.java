@@ -11,7 +11,10 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     WifiSignalDataCollector wifiSignal;
 
@@ -31,8 +34,14 @@ public class MainActivity extends AppCompatActivity {
     TextView dataInputView;
     TextView dataTextView;
     TextView posTextView;
+    Spinner kSpinner;
+
+    int k_Value = 3;
+    String[] spinnerArray = {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"};
+
     List<String> ssids = new ArrayList<>();
     Map<String, Map<String, Integer>> training = new HashMap<>();
+
     StorageHandler storageHandler;
     private ClassifierClass classifierClass;
 
@@ -44,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         classifierClass = new ClassifierClass(this);
 
         ssids.add("Westh");
-        ssids.add("DIRECT-EO pass-PHILIPS TV");
+        ssids.add("DIRECT-qo pass-PHILIPS TV");
         ssids.add("ismart");
         storageHandler = new StorageHandler(getApplicationContext());
 
@@ -62,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         wifiSignal = new WifiSignalDataCollector(getApplicationContext());
+
+        kSpinner = findViewById(R.id.kSpinner);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<> (this,android.R.layout.simple_spinner_item, spinnerArray);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        kSpinner.setAdapter(spinnerArrayAdapter);
+
+        kSpinner.setOnItemSelectedListener(this);
 
         signalButton = findViewById(R.id.signalButton);
         scanButton = findViewById(R.id.scanButton);
@@ -96,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         fileContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("yes", "Wifi routers available: " + wifiSignal.wifiManager.getScanResults());
                 dataTextView.setText("");
                 dataTextView.setText(storageHandler.read());
             }
@@ -120,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                    dataTextView.append("Data stored: " + string.toString() + "\n");
                     writeString(cutChar(string.toString()) + "\n");
 
             }
@@ -129,8 +147,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 posTextView.setText("");
-                String currentPositionString = "";
-                posTextView.setText("Current location is: " + currentPositionString);
+                List<Integer> tempList = new ArrayList<>();
+                List<ScanResult> scanResults = wifiSignal.wifiManager.getScanResults();
+                for(ScanResult scanResult : scanResults) {
+                    for (String ssid : ssids) {
+                        if(scanResult.SSID.equals(ssid)){
+                            tempList.add(scanResult.level);
+                        }
+                    }
+                }
+
+
+                //Hardcoded K-value
+                String currentPositionString = classifierClass.knn(tempList, k_Value);
+                posTextView.setText("Current location is: " + currentPositionString + "\n" + "With a K-value of: " + k_Value);
             }
 
         });
@@ -153,6 +183,19 @@ public class MainActivity extends AppCompatActivity {
         }else{
             storageHandler.write(string);
         }
+
+    }
+
+
+    //For the K-value spinner chooser
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String value = parent.getItemAtPosition(position).toString();
+        this.k_Value = Integer.parseInt(value);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
 }

@@ -26,7 +26,7 @@ public class ClassifierClass {
             String[] s = entry.split(";");
             String position = s[0];
             List<Integer> list = new ArrayList();
-            for(String str: s[1].split("-")){
+            for(String str: s[1].split(",-")){
                 list.add(Integer.parseInt(str));
             }
             contentMap.put(position,list);
@@ -37,6 +37,9 @@ public class ClassifierClass {
     public String knn(List<Integer> test, int k){
         SortedMap<Double, String> euclideanDistanceMap = new TreeMap<>();
         for(Map.Entry<String, List<Integer>> entry : getContents().entrySet()) {
+            if(test.size() != 3){
+                return "";
+            }
             euclideanDistanceMap.put(calcEuclidean(entry.getValue(), test), entry.getKey());
         }
         List<String> positionStrengthAverage = new ArrayList<>();
@@ -66,4 +69,5 @@ public class ClassifierClass {
 
         return Math.sqrt((Math.pow(training.get(0),2) - Math.pow(test.get(0),2)) + (Math.pow(training.get(1),2) - Math.pow(test.get(1),2)) + (Math.pow(training.get(2),2) - Math.pow(test.get(2),2)));
     }
+
 }
