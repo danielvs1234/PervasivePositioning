@@ -130,8 +130,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void writeString(String string){
-        String temp = storageHandler.read();
-        String newString = temp + string;
-        storageHandler.write(newString);
+        if(storageHandler.checkIfFileExists()){
+            String temp = storageHandler.read();
+            String newString = temp + string;
+            storageHandler.write(newString);
+        }else{
+            storageHandler.write(string);
+        }
+
     }
 }
