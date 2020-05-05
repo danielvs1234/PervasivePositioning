@@ -116,11 +116,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-                try {
-                    storageHandler.write(cutChar(string.toString()) + "\n");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    writeString(cutChar(string.toString()) + "\n");
+
             }
         });
     }
@@ -130,5 +127,11 @@ public class MainActivity extends AppCompatActivity {
             str = str.substring(0, str.length() - 1);
         }
         return str;
+    }
+
+    private void writeString(String string){
+        String temp = storageHandler.read();
+        String newString = temp + string;
+        storageHandler.write(newString);
     }
 }

@@ -24,28 +24,18 @@ public class StorageHandler {
     }
 
 
-    public void write(String map) throws IOException {
+    public void write(String map) {
 
         FileOutputStream fileOutputStream;
 
         try {
-  //          fileOutputStream = this.context.openFileOutput("map.dat", Context.MODE_APPEND);
-  //          ObjectOutputStream os = new ObjectOutputStream(fileOutputStream);
-   //         os.writeObject(map);
-   //         os.close();
-   //         fileOutputStream.close();
-            if(checkIfFileExists()) {
-                Writer out = new BufferedWriter(new FileWriter("map.dat", true));
-                out.write(map);
-                out.close();
-            }else {
-                fileOutputStream = this.context.openFileOutput("map.dat", Context.MODE_APPEND);
+                fileOutputStream = this.context.openFileOutput("map.dat", Context.MODE_PRIVATE);
                 ObjectOutputStream os = new ObjectOutputStream(fileOutputStream);
                 os.writeObject(map);
                 os.close();
                 fileOutputStream.close();
-            }
-        }catch(Exception e){
+
+        }catch(IOException e){
             Log.d("Save to Storage", "saveMapToStorage: Method failed ");
             e.printStackTrace();
         }
@@ -69,7 +59,11 @@ public class StorageHandler {
             return null;
         }
 
-        return map;
+        if(map.length() > 0) {
+            return map;
+        }else{
+            return "";
+        }
     }
 
     public boolean checkIfFileExists(){
