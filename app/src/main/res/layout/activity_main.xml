@@ -10,12 +10,13 @@
         android:id="@+id/signalButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Press to make things"
+        android:text="Add point to training"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.286" />
+        app:layout_constraintVertical_bias="0.216" />
 
     <TextView
         android:id="@+id/dataTextView"
@@ -37,10 +38,10 @@
         android:text="Scan Networks"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.103"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.183" />
+        app:layout_constraintVertical_bias="0.178" />
 
     <TextView
         android:id="@+id/distanceTextView"
@@ -91,5 +92,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.866" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check Current position"
+        tools:layout_editor_absoluteX="114dp"
+        tools:layout_editor_absoluteY="243dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
