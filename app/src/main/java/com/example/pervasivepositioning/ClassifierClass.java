@@ -66,8 +66,14 @@ public class ClassifierClass {
     }
 
     public static Double calcEuclidean(List<Integer> training, List<Integer> test){
-
-        return Math.sqrt((Math.pow(training.get(0),2) - Math.pow(test.get(0),2)) + (Math.pow(training.get(1),2) - Math.pow(test.get(1),2)) + (Math.pow(training.get(2),2) - Math.pow(test.get(2),2)));
+        if(training.size() != test.size()){
+            throw new Error("List size mismatch in calculate euclidean distance. Training size was "+ training.size()+", test size was " + test.size());
+        }
+        Double calculatorValue = 0d;
+        for(int i = 0; i<training.size();i++){
+            calculatorValue += Math.pow(training.get(i),2) - Math.pow(test.get(i),2);
+        }
+        return Math.sqrt(calculatorValue);
     }
 
 }
