@@ -34,12 +34,14 @@ public class MainActivity extends AppCompatActivity {
     List<String> ssids = new ArrayList<>();
     Map<String, Map<String, Integer>> training = new HashMap<>();
     StorageHandler storageHandler;
+    private ClassifierClass classifierClass;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        classifierClass = new ClassifierClass(this);
 
         ssids.add("Westh");
         ssids.add("DIRECT-EO pass-PHILIPS TV");

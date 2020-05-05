@@ -42,11 +42,11 @@ public class StorageHandler {
 
     }
 
-    public String read(String name) {
+    public String read() {
 
         String map = "";
         try {
-            FileInputStream fis = context.openFileInput(name);
+            FileInputStream fis = context.openFileInput("map.dat");
             ObjectInputStream input = new ObjectInputStream(fis);
             map = (String) input.readObject();
             input.close();
