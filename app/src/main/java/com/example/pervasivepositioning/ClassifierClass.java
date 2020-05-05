@@ -16,9 +16,12 @@ public class ClassifierClass {
 
     public Map<String, Map<String, Integer>> getContents(){
         String contents = storage.read("file.name");
-        String[] entries = contents.split("\n");
-        for(String entry: entries){
-            entry.split(";");
+        for(String entry: contents.split("\n")){
+            String[] s = entry.split(";");
+            String position = s[0];
+            for(String s :entry.split(";")){
+            }
+
         }
     }
 }
