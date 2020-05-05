@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,9 +27,10 @@ public class MainActivity extends AppCompatActivity {
     Button scanButton;
     Button fileContent;
     Button deleteButton;
+    Button checkPosButton;
     TextView dataInputView;
     TextView dataTextView;
-    TextView distTextView;
+    TextView posTextView;
     List<String> ssids = new ArrayList<>();
     Map<String, Map<String, Integer>> training = new HashMap<>();
     StorageHandler storageHandler;
@@ -65,14 +65,15 @@ public class MainActivity extends AppCompatActivity {
         scanButton = findViewById(R.id.scanButton);
         fileContent = findViewById(R.id.fileContent);
         deleteButton = findViewById(R.id.deleteButton);
+        checkPosButton = findViewById(R.id.checkPositionButton);
 
         dataTextView = findViewById(R.id.dataTextView);
         dataTextView.setMovementMethod(new ScrollingMovementMethod());
         dataTextView.setText("");
 
-        distTextView = findViewById(R.id.distanceTextView);
-        distTextView.setMovementMethod(new ScrollingMovementMethod());
-        distTextView.setText("");
+        posTextView = findViewById(R.id.positionTextView);
+        posTextView.setMovementMethod(new ScrollingMovementMethod());
+        posTextView.setText("");
 
         dataInputView = findViewById(R.id.dataInputText);
 
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Add Training point to file.
         signalButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -120,7 +122,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        checkPosButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                posTextView.setText("");
+                String currentPositionString = "";
+                posTextView.setText("Current location is: " + currentPositionString);
+            }
+
+        });
+
     }
+
 
     public String cutChar(String str) {
         if (str != null && str.length() > 0 && str.charAt(str.length() - 1) == ',') {
