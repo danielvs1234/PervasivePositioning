@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+        //Delete contents from storage
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+        //Read contents from storage
         fileContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+        //Find current position based on the signal strength levels obtained
         checkPosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,14 +160,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 }
 
-
-                //Hardcoded K-value
-                String currentPositionString = classifierClass.knn(tempList, k_Value);
-                posTextView.setText("Current location is: " + currentPositionString + "\n" + "With a K-value of: " + k_Value);
+                //Uses the knn classifier with a K-value based on the spinner
+                int positionOfSpinner = kSpinner.getSelectedItemPosition();
+                String currentPositionString = classifierClass.knn(tempList, Integer.parseInt(spinnerArray[positionOfSpinner]));
+                posTextView.setText("Current location is: " + currentPositionString + "\n" + "With a K-value of: " + spinnerArray[positionOfSpinner]);
             }
-
         });
-
     }
 
 

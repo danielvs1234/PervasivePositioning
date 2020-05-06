@@ -65,7 +65,7 @@ public class ClassifierClass {
         return x + "," + y + "," + z;
     }
 
-    public static Double calcEuclidean(List<Integer> training, List<Integer> test){
+    public Double calcEuclidean(List<Integer> training, List<Integer> test){
         if(training.size() != test.size()){
             throw new Error("List size mismatch in calculate euclidean distance. Training size was "+ training.size()+", test size was " + test.size());
         }
